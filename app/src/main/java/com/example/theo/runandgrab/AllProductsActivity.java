@@ -46,7 +46,7 @@ public class AllProductsActivity extends ListActivity {
     ArrayList<HashMap<String, String>> productsList;
 
     // url to get all products list
-    private static String url_all_products = "http://10.0.2.2/get_all_event.php";
+    private static String url_all_products = "http://runandgrab.xyz/get_all_event.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

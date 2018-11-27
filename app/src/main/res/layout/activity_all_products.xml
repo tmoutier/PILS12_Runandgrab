@@ -19,6 +19,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="#f05924"
+            android:visibility="invisible"
             android:text="Je participe"
             android:textColor="@android:color/white"/>
+
+    <Button android:id="@+id/btncalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="#f05924"
+            android:visibility="invisible"
+            android:text="Ajouter l'event à mon calendrier"
+            android:textColor="@android:color/white"/>
+
 </LinearLayout>

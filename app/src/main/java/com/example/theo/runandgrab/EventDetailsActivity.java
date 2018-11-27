@@ -6,10 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import android.provider.CalendarContract;
 import android.widget.*;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,8 +42,8 @@ public class EventDetailsActivity extends ListActivity {
     ArrayList<HashMap<String, String>> productsList;
 
     // url to get all products list
-    private static String url_all_products = "http://10.0.2.2/get_event_detail.php";
-    private static String add_participant = "http://10.0.2.2/add_participant.php";
+    private static String url_all_products = "http://runandgrab.xyz/get_event_detail.php";
+    private static String add_participant = "http://runandgrab.xyz/add_participant.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -54,8 +53,12 @@ public class EventDetailsActivity extends ListActivity {
     private static final String TAG_lieu = "lieu";
     private static final String TAG_comm = "commentaires";
     private static final String TAG_participant = "nb_participant";
+    private static final String TAG_heure = "heure";
     Button btninscription;
-
+    public String date_calendar = null;
+    public String heure_calendar = null;
+    public String description_calendar = null;
+    public String lieu_calendar = null;
     // products JSONArray
     JSONArray lieu = null;
 
@@ -76,7 +79,7 @@ public class EventDetailsActivity extends ListActivity {
 
         // Create button
         Button btninscription = (Button) findViewById(R.id.btninscription);
-
+        btninscription.setVisibility(View.VISIBLE);
         // button click event
         btninscription.setOnClickListener(new View.OnClickListener() {
 
@@ -84,6 +87,41 @@ public class EventDetailsActivity extends ListActivity {
             public void onClick(View view) {
                 // creating new product in background thread
                 new AddParticipant().execute();
+            }
+        });
+
+        Button btncalendar = (Button) findViewById(R.id.btncalendar);
+        btncalendar.setVisibility(View.VISIBLE);
+        btninscription.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.setType("vnd.android.cursor.item/event");
+                intent.putExtra(CalendarContract.Events.TITLE, "Plogging with Run and Grab");
+                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, lieu_calendar);
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, description_calendar);
+                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,date_calendar);
+             //   intent.putExtra(CalendarContract.Events.)
+
+// Setting dates
+                GregorianCalendar calDate = new GregorianCalendar(date_calendar);
+                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                        calDate.getTimeInMillis());
+                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                        calDate.getTimeInMillis());
+
+// make it a full day event
+                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+
+// make it a recurring Event
+                intent.putExtra(Events.RRULE, "FREQ=WEEKLY;COUNT=11;WKST=SU;BYDAY=TU,TH");
+
+// Making it private and shown as busy
+                intent.putExtra(Events.ACCESS_LEVEL, Events.ACCESS_PRIVATE);
+                intent.putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
+
+                startActivity(intent);
             }
         });
     }
@@ -138,7 +176,7 @@ public class EventDetailsActivity extends ListActivity {
                         String ville = c.getString(TAG_ville);
                         String lieu = c.getString(TAG_lieu);
                         String date = c.getString("date");
-                        String heure = c.getString("heure");
+                        String heure = c.getString(TAG_heure);
                         String commentaires = c.getString("commentaires");
                         String nb_participant = c.getString(TAG_participant);
 
@@ -153,6 +191,10 @@ public class EventDetailsActivity extends ListActivity {
                         map.put("heure", heure);
                         map.put(TAG_comm, commentaires);
                         map.put(TAG_participant, nb_participant);
+                        date_calendar = date;
+                        heure_calendar = heure;
+                        description_calendar = commentaires;
+                        lieu_calendar = lieu;
 
                         // adding HashList to ArrayList
                         productsList.add(map);

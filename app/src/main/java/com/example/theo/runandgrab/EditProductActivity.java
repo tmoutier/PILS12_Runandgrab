@@ -37,12 +37,12 @@ public class EditProductActivity extends Activity {
     JSONParser jParser = new JSONParser();
 
     // single product url
-    private static final String url_product_detials = "http://10.0.2.2/get_event_detail.php";
+    private static final String url_product_detials = "http://runandgrab.xyz/get_event_detail.php";
     // url to update product
-    private static final String url_update_product = "http://10.0.2.2/update_event.php";
+    private static final String url_update_product = "http://runandgrab.xyz/update_event.php";
 
     // url to delete product
-    private static final String url_delete_product = "http://10.0.0.2/delete_event.php";
+    private static final String url_delete_product = "http://runandgrab.xyz/delete_event.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

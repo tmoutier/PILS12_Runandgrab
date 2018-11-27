@@ -31,7 +31,7 @@ public class NewProductActivity extends Activity {
     EditText inputville;
 
     // url to create new product
-    private static String url_create_product = "http://10.0.2.2/create_event.php";
+    private static String url_create_product = "http://runandgrab.xyz/create_event.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
