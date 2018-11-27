@@ -76,6 +76,16 @@
                 android:label="@string/title_activity_event_details"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+                android:name=".FilterEvent"
+                android:label="@string/title_activity_filter_event"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+                android:name=".AllEventFiltered"
+                android:label="@string/title_activity_all_event_filtered"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -19,4 +19,6 @@
     <string name="title_activity_edit_product">EditProductActivity</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_event_details">EventDetailsActivity</string>
+    <string name="title_activity_filter_event">FilterEvent</string>
+    <string name="title_activity_all_event_filtered">AllEventFiltered</string>
 </resources>

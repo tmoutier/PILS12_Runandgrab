@@ -45,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Launching All products Activity
-                Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
+                Intent i = new Intent(getApplicationContext(), FilterEvent.class);
                 startActivity(i);
 
             }

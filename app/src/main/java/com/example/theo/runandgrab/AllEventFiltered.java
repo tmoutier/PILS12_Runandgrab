@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.widget.*;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -30,21 +29,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-public class EventDetailsActivity extends ListActivity {
+public class AllEventFiltered extends ListActivity {
 
     // Progress Dialog
     private ProgressDialog pDialog;
-    String pid;
+
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
 
     ArrayList<HashMap<String, String>> productsList;
 
     // url to get all products list
-    private static String url_all_products = "http://10.0.2.2/get_event_detail.php";
-    private static String add_participant = "http://10.0.2.2/add_participant.php";
+    private static String url_all_products = "http://10.0.2.2/filter_event.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -52,10 +55,9 @@ public class EventDetailsActivity extends ListActivity {
     private static final String TAG_event = "event";
     private static final String TAG_PID = "idevent";
     private static final String TAG_lieu = "lieu";
-    private static final String TAG_comm = "commentaires";
-    private static final String TAG_participant = "nb_participant";
-    Button btninscription;
-
+    //private static final String TAG_comm = "commentaires";
+    //private static final String TAG_participant = "nb_participant";
+    String pid_ville;
     // products JSONArray
     JSONArray lieu = null;
 
@@ -63,10 +65,10 @@ public class EventDetailsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_products);
-        pid = getIntent().getStringExtra("idevent");
 
         // Hashmap for ListView
         productsList = new ArrayList<HashMap<String, String>>();
+        pid_ville = getIntent().getStringExtra("ville");
 
         // Loading products in Background Thread
         new LoadAllProducts().execute();
@@ -74,18 +76,44 @@ public class EventDetailsActivity extends ListActivity {
         // Get listview
         ListView lv = getListView();
 
-        // Create button
-        Button btninscription = (Button) findViewById(R.id.btninscription);
-
-        // button click event
-        btninscription.setOnClickListener(new View.OnClickListener() {
+        // on seleting single product
+        // launching Edit Product Screen
+        lv.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onClick(View view) {
-                // creating new product in background thread
-                new AddParticipant().execute();
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // getting values from selected ListItem
+                String idevent = ((TextView) view.findViewById(R.id.pid)).getText()
+                        .toString();
+
+                // Starting new intent
+                Intent in = new Intent(getApplicationContext(),
+                        EventDetailsActivity.class);
+                // sending pid to next activity
+                in.putExtra(TAG_PID, idevent);
+
+                // starting new activity and expecting some response back
+                startActivityForResult(in, 100);
             }
         });
+
+    }
+
+    // Response from Edit Product Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // if result code 100
+        if (resultCode == 100) {
+            // if result code 100 is received
+            // means user edited/deleted product
+            // reload this screen again
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+
     }
 
     /**
@@ -99,7 +127,7 @@ public class EventDetailsActivity extends ListActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(EventDetailsActivity.this);
+            pDialog = new ProgressDialog(AllEventFiltered.this);
             pDialog.setMessage("Loading events. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -112,9 +140,8 @@ public class EventDetailsActivity extends ListActivity {
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("ville", pid_ville));
             // getting JSON string from URL
-
-            params.add(new BasicNameValuePair("idevent", pid));
             JSONObject json = jParser.makeHttpRequest(url_all_products, "GET", params);
 
             // Check your log cat for JSON reponse
@@ -139,8 +166,8 @@ public class EventDetailsActivity extends ListActivity {
                         String lieu = c.getString(TAG_lieu);
                         String date = c.getString("date");
                         String heure = c.getString("heure");
-                        String commentaires = c.getString("commentaires");
-                        String nb_participant = c.getString(TAG_participant);
+                        //String commentaires = c.getString("commentaires");
+                        //String nb_participant = c.getString(TAG_participant);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
@@ -151,12 +178,20 @@ public class EventDetailsActivity extends ListActivity {
                         map.put(TAG_lieu, lieu);
                         map.put("date", date);
                         map.put("heure", heure);
-                        map.put(TAG_comm, commentaires);
-                        map.put(TAG_participant, nb_participant);
+                        //map.put(TAG_comm, commentaires);
+                        //map.put(TAG_participant, nb_participant);
 
                         // adding HashList to ArrayList
                         productsList.add(map);
                     }
+                } else {
+                    // no products found
+                    // Launch Add New product Activity
+                    Intent i = new Intent(getApplicationContext(),
+                            NewProductActivity.class);
+                    // Closing all previous activities
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -178,69 +213,15 @@ public class EventDetailsActivity extends ListActivity {
                      * Updating parsed JSON data into ListView
                      * */
                     ListAdapter adapter = new SimpleAdapter(
-                            EventDetailsActivity.this, productsList,
-                            R.layout.activity_event_details, new String[] { TAG_PID, TAG_ville,
-                            TAG_lieu, "date", "heure", TAG_comm, TAG_participant},
-                            new int[] { R.id.pid, R.id.ville, R.id.lieu, R.id.date, R.id.heure, R.id.commentaires, R.id.nbParticipant });
+                            AllEventFiltered.this, productsList,
+                            R.layout.all_items, new String[] { TAG_PID, TAG_ville,
+                            TAG_lieu, "date", "heure"},
+                            new int[] { R.id.pid, R.id.ville, R.id.lieu, R.id.date, R.id.heure});
                     // updating listview
                     setListAdapter(adapter);
                 }
             });
 
-        }
-
-    }
-
-    class AddParticipant extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(EventDetailsActivity.this);
-            pDialog.setMessage("Inscription à l'event");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-        protected String doInBackground(String... args) {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-            params.add(new BasicNameValuePair("idevent", pid));
-            // getting JSON Object
-            // Note that create product url accepts POST method
-            JSONObject json = jParser.makeHttpRequest(add_participant,
-                    "GET", params);
-
-            // check log cat fro response
-            Log.d("Create Response", json.toString());
-
-            // check for success tag
-            try {
-                int success = json.getInt(TAG_SUCCESS);
-
-                if (success == 1) {
-                    // successfully created product
-                    Intent i = new Intent(getApplicationContext(), FilterEvent.class);
-                    startActivity(i);
-
-                    // closing this screen
-                    finish();
-                } else {
-                    // failed to create product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once done
-            pDialog.dismiss();
         }
 
     }
