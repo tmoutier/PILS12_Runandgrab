@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 public class DashboardActivity extends AppCompatActivity {
-    private SessionHandler session;
+   // private SessionHandler session;
     Button btnViewMap;
     Button btnViewProducts;
     Button btnNewProduct;
@@ -18,8 +18,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        session = new SessionHandler(getApplicationContext());
-        User user = session.getUserDetails();
+        //session = new SessionHandler(getApplicationContext());
+        //User user = session.getUserDetails();
 
         // Buttons
         btnViewProducts = (Button) findViewById(R.id.btnViewProducts);
@@ -63,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        Button logoutBtn = findViewById(R.id.btnLogout);
+       /* Button logoutBtn = findViewById(R.id.btnLogout);
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
                 finish();
 
             }
-        });
+        });*/
     }
 }
 

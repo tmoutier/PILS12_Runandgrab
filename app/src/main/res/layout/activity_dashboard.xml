@@ -33,13 +33,5 @@
             android:text="Créer un event"
             android:textColor="@android:color/white" />
 
-    <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#f12594"
-            android:text="@string/logout"
-            android:textColor="@android:color/white" />
 
 </LinearLayout>

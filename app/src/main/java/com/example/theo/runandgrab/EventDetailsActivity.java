@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import android.provider.CalendarContract;
 import android.widget.*;
@@ -77,13 +79,13 @@ public class EventDetailsActivity extends ListActivity {
         // Get listview
         ListView lv = getListView();
 
-        // Create button
+        //Create button
         Button btninscription = (Button) findViewById(R.id.btninscription);
         btninscription.setVisibility(View.VISIBLE);
         // button click event
         btninscription.setOnClickListener(new View.OnClickListener() {
-
             @Override
+
             public void onClick(View view) {
                 // creating new product in background thread
                 new AddParticipant().execute();
@@ -92,37 +94,44 @@ public class EventDetailsActivity extends ListActivity {
 
         Button btncalendar = (Button) findViewById(R.id.btncalendar);
         btncalendar.setVisibility(View.VISIBLE);
-        btninscription.setOnClickListener(new View.OnClickListener() {
-
+        // button click event
+        btncalendar.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
+                // creating new product in background thread
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType("vnd.android.cursor.item/event");
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String[] heureCalendar = heure_calendar.split(":");
+                int hours = Integer.parseInt(heureCalendar[0]);
+                int minutes = Integer.parseInt(heureCalendar[1]);
+                int secondes = Integer.parseInt(heureCalendar[2]);
+                long eventTime = secondes + 60*minutes+3600*hours;
+                eventTime = TimeUnit.MILLISECONDS.convert(eventTime, TimeUnit.SECONDS);
+                long twoHours = TimeUnit.MILLISECONDS.convert(7200, TimeUnit.SECONDS);
+                try {
+                    Date d = formatter.parse(date_calendar);
+
+                    long startTime = d.getTime() +eventTime;
+                    long endTime = startTime + twoHours;
+
+
+                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+
                 intent.putExtra(CalendarContract.Events.TITLE, "Plogging with Run and Grab");
-                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, lieu_calendar);
                 intent.putExtra(CalendarContract.Events.DESCRIPTION, description_calendar);
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,date_calendar);
-             //   intent.putExtra(CalendarContract.Events.)
+                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, lieu_calendar);
 
-// Setting dates
-                GregorianCalendar calDate = new GregorianCalendar(date_calendar);
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                        calDate.getTimeInMillis());
-                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                        calDate.getTimeInMillis());
-
-// make it a full day event
-                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
-
-// make it a recurring Event
-                intent.putExtra(Events.RRULE, "FREQ=WEEKLY;COUNT=11;WKST=SU;BYDAY=TU,TH");
-
-// Making it private and shown as busy
-                intent.putExtra(Events.ACCESS_LEVEL, Events.ACCESS_PRIVATE);
-                intent.putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
 
                 startActivity(intent);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
             }
+
         });
     }
 
