@@ -5,9 +5,12 @@
               android:background="#304769"
               android:gravity="center_vertical"
               android:orientation="vertical"
-              android:padding="50dp">
-
+              android:padding="1dp">
     <!-- Product id (pid) - will be HIDDEN - used to pass to other activity -->
+    <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
     <TextView
             android:id="@+id/pid"
             android:layout_width="fill_parent"
@@ -19,7 +22,7 @@
               android:text="Ville de l'event"
               android:paddingLeft="10dip"
               android:paddingRight="10dip"
-              android:paddingTop="10dip"
+              android:paddingTop="5dip"
               android:textSize="17dip"
               android:textColor="@android:color/white"/>
 
@@ -27,7 +30,7 @@
             android:id="@+id/ville"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dip"
+            android:paddingTop="5dip"
             android:textAlignment="center"
             android:paddingLeft="6dip"
             android:textSize="17dip"
@@ -40,14 +43,14 @@
               android:text="Lieu de l'event"
               android:paddingLeft="10dip"
               android:paddingRight="10dip"
-              android:paddingTop="10dip"
+              android:paddingTop="5dip"
               android:textSize="17dip"
               android:textColor="@android:color/white"/>
     <TextView
             android:id="@+id/lieu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dip"
+            android:paddingTop="5dip"
             android:paddingLeft="6dip"
             android:textAlignment="center"
             android:textSize="17dip"
@@ -59,14 +62,14 @@
               android:text="Date de l'event"
               android:paddingLeft="10dip"
               android:paddingRight="10dip"
-              android:paddingTop="10dip"
+              android:paddingTop="5dip"
               android:textSize="17dip"
               android:textColor="@android:color/white"/>
     <TextView
             android:id="@+id/date"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dip"
+            android:paddingTop="5dip"
             android:textAlignment="center"
             android:paddingLeft="6dip"
             android:textSize="17dip"
@@ -78,14 +81,14 @@
               android:text="Commentaires sur l'event"
               android:paddingLeft="10dip"
               android:paddingRight="10dip"
-              android:paddingTop="10dip"
+              android:paddingTop="5dip"
               android:textSize="17dip"
               android:textColor="@android:color/white"/>
     <TextView
             android:id="@+id/commentaires"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dip"
+            android:paddingTop="5dip"
             android:paddingLeft="6dip"
             android:textAlignment="center"
             android:textSize="17dip"
@@ -96,18 +99,17 @@
               android:text="Nombre d'inscrits"
               android:paddingLeft="10dip"
               android:paddingRight="10dip"
-              android:paddingTop="10dip"
+              android:paddingTop="5dip"
               android:textSize="17dip"
               android:textColor="@android:color/white"/>
     <TextView
             android:id="@+id/nbParticipant"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dip"
+            android:paddingTop="5dip"
             android:paddingLeft="6dip"
             android:textAlignment="center"
             android:textSize="17dip"
             android:textStyle="bold"
             android:textColor="@android:color/white"/>
-
 </LinearLayout>
